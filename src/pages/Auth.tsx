@@ -8,7 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
-import { getColleges } from '@/services/database';
+import { authService } from '@/services/auth';
+import { collegeService } from '@/services/college';
 import { 
   User, 
   Shield, 
@@ -102,18 +103,47 @@ const Auth = () => {
     if (accountType === 'admin' && !selectedCollege) {
       toast({
         title: 'Error',
-        description: 'Please select a college for admin account',
+        description: 'Please select or create a college for admin account',
         variant: 'destructive',
       });
       setIsLoading(false);
       return;
     }
 
-    const collegeName = accountType === 'admin' 
-      ? colleges.find(c => c.id === selectedCollege)?.name 
-      : undefined;
+    let collegeName = undefined;
+    
+    if (accountType === 'admin') {
+      if (selectedCollege === 'new-college') {
+        // Create new college
+        const { data: newCollege, error: collegeError } = await collegeService.createCollege({
+          name: fullName, // Using fullName as college name for new colleges
+          location: '', // Can be updated later
+          code: fullName.split(' ').map(word => word[0]).join('').toUpperCase()
+        });
+        
+        if (collegeError) {
+          toast({
+            title: 'Error',
+            description: 'Failed to create college',
+            variant: 'destructive',
+          });
+          setIsLoading(false);
+          return;
+        }
+        
+        collegeName = newCollege?.name;
+      } else {
+        collegeName = colleges.find(c => c.id === selectedCollege)?.name;
+      }
+    }
 
-    const { error } = await signUp(email, password, fullName, collegeName);
+    const { error } = await authService.signUp({
+      email,
+      password,
+      fullName,
+      collegeName,
+      accountType
+    });
     
     if (error) {
       toast({
@@ -124,9 +154,14 @@ const Auth = () => {
     } else {
       toast({
         title: 'Success',
-        description: 'Check your email to confirm your account',
+        description: 'Account created successfully! You can now sign in.',
       });
       setActiveTab('signin');
+       // Clear form
+       setEmail('');
+       setPassword('');
+       setFullName('');
+       setSelectedCollege('');
     }
     
     setIsLoading(false);
@@ -352,9 +387,22 @@ const Auth = () => {
                                   {college.name} {college.location && `- ${college.location}`}
                                 </SelectItem>
                               ))}
+                              <SelectItem value="new-college">
+                                + Add New College
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
+                        {selectedCollege === 'new-college' && (
+                          <div className="space-y-2 mt-2">
+                            <Input
+                              placeholder="Enter college name"
+                              value={fullName}
+                              onChange={(e) => setFullName(e.target.value)}
+                              className="glass-effect border-white/20 focus:border-primary/50"
+                            />
+                          </div>
+                        )}
                       </div>
                     )}
 

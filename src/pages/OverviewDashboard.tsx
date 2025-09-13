@@ -13,9 +13,7 @@ import {
   TrendingUp, Users, GraduationCap, Building2, Award, Download, 
   Briefcase, DollarSign, Target, BarChart3, Calendar, MapPin, Loader2
 } from "lucide-react";
-import { 
-  getPlacementStats, getBranchWiseData, getCollegeWiseData 
-} from "@/services/database";
+import { collegeService } from '@/services/college';
 
 const OverviewDashboard = () => {
   const [selectedYear, setSelectedYear] = useState("2024");

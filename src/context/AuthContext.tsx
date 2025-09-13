@@ -87,6 +87,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUp = async (email: string, password: string, fullName?: string, collegeName?: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
+    // If collegeName is "new-college", we'll handle it specially
+    let collegeData = collegeName;
+    if (collegeName === 'new-college') {
+      collegeData = fullName; // Use fullName as college name for new colleges
+    }
+    
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -94,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         emailRedirectTo: redirectUrl,
         data: {
           full_name: fullName,
-          college_name: collegeName
+          college_name: collegeData
         }
       }
     });

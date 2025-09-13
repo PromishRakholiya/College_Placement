@@ -78,17 +78,10 @@ const Home = () => {
       gradient: 'from-blue-500 to-purple-600'
     },
     {
-      icon: TrendingUp,
-      title: 'Live Monitor',
-      description: 'Real-time placement tracking and updates.',
-      action: () => navigate('/live-monitor'),
-      gradient: 'from-red-500 to-pink-600'
-    },
-    {
       icon: Settings,
       title: 'Admin Panel',
       description: 'Manage placement data and system settings.',
-      action: () => navigate('/login'),
+      action: () => navigate('/auth'),
       gradient: 'from-orange-500 to-red-600'
     }
   ];
@@ -154,16 +147,16 @@ const Home = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-scale-in">
               <Button
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/auth')}
                 size="lg"
                 className="btn-hover bg-gradient-primary hover:opacity-90 text-white border-0 px-8 py-3 text-lg"
               >
                 <Users className="h-5 w-5 mr-2" />
-                Login as User
+                Get Started
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
               <Button
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/auth')}
                 variant="outline"
                 size="lg"
                 className="btn-hover glass-effect border-primary/30 hover:border-primary/50 hover:bg-primary/10 px-8 py-3 text-lg"

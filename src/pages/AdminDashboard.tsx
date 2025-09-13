@@ -68,7 +68,7 @@ const AdminDashboard = () => {
   }, []);
 
   const loadColleges = async () => {
-    const collegesData = await getColleges();
+    const { data: collegesData } = await collegeService.getColleges();
     setColleges(collegesData);
   };
 

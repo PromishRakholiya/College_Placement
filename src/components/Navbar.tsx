@@ -48,7 +48,6 @@ const Navbar = () => {
     { to: '/overview', icon: BarChart3, label: 'Overview' },
     { to: '/colleges', icon: Building2, label: 'All Colleges' },
     { to: '/compare', icon: GitCompare, label: 'Compare' },
-    { to: '/live-monitor', icon: Activity, label: 'Live Monitor' },
   ];
 
   return (

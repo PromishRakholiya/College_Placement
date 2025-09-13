@@ -14,7 +14,15 @@ import {
   TrendingUp, Users, GraduationCap, Building2, Award, Download, 
   MapPin, Calendar, Star, Briefcase, DollarSign, ArrowLeft, Loader2
 } from "lucide-react";
-import { getCollegeById, type CollegeWithPlacement } from "@/services/database";
+import { collegeService } from '@/services/college';
+
+interface CollegeWithPlacement {
+  id: string;
+  name: string;
+  location?: string;
+  code?: string;
+  placement_data?: any[];
+}
 
 const CollegeDashboard = () => {
   const { collegeId } = useParams();
@@ -29,7 +37,7 @@ const CollegeDashboard = () => {
       
       setLoading(true);
       try {
-        const collegeData = await getCollegeById(collegeId);
+        const { data: collegeData } = await collegeService.getCollegeById(collegeId);
         setCollege(collegeData);
       } catch (error) {
         console.error('Error fetching college data:', error);
