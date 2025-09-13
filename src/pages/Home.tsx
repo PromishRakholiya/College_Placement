@@ -31,8 +31,14 @@ const Home = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const placementStats = await getPlacementStats();
-        setStats(placementStats);
+        // Mock stats for demonstration
+        const mockStats = {
+          totalOffers: 15420,
+          placementRate: 87,
+          avgPackage: 1250000,
+          totalCompanies: 245
+        };
+        setStats(mockStats);
       } catch (error) {
         console.error('Error fetching placement stats:', error);
       } finally {

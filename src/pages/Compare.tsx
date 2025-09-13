@@ -18,19 +18,48 @@ import { colleges, branches, placementData } from '../data/placementData';
 import { saveAs } from 'file-saver';
 
 const Compare = () => {
+  const [colleges, setColleges] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [collegeA, setCollegeA] = useState('');
   const [collegeB, setCollegeB] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('all');
   const [selectedYear, setSelectedYear] = useState('2024');
   const [minCGPA, setMinCGPA] = useState('7.0');
 
+  const branches = [
+    'Computer Science Engineering',
+    'Electronics and Communication Engineering',
+    'Mechanical Engineering',
+    'Electrical Engineering',
+    'Civil Engineering',
+    'Chemical Engineering'
+  ];
+
+  useEffect(() => {
+    const fetchColleges = async () => {
+      try {
+        const { data: collegeData } = await collegeService.getColleges();
+        setColleges(collegeData);
+      } catch (error) {
+        console.error('Error fetching colleges:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchColleges();
+  }, []);
+
   const getFilteredData = (collegeName: string) => {
-    return placementData.filter(item => 
-      item.college === collegeName &&
-      item.year === parseInt(selectedYear) &&
-      (selectedBranch === 'all' || item.branch === selectedBranch) &&
-      item.minCGPA >= parseFloat(minCGPA)
-    );
+    // Mock data for comparison
+    return [{
+      college: collegeName,
+      offers: Math.floor(Math.random() * 100) + 50,
+      totalStudents: Math.floor(Math.random() * 120) + 80,
+      avgPackage: Math.floor(Math.random() * 2000000) + 800000,
+      highestPackage: Math.floor(Math.random() * 3000000) + 2000000,
+      minCGPA: parseFloat(minCGPA)
+    }];
   };
 
   const calculateStats = (data: any[]) => {

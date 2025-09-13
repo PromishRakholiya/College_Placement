@@ -32,15 +32,37 @@ const OverviewDashboard = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [placementStats, branchStats, colleges] = await Promise.all([
-          getPlacementStats(),
-          getBranchWiseData(),
-          getCollegeWiseData()
-        ]);
+        const { data: colleges } = await collegeService.getColleges();
+        
+        // Generate mock data for demonstration
+        const mockStats = {
+          totalOffers: 15420,
+          placementRate: 87.3,
+          avgPackage: 1250000,
+          totalCompanies: 245
+        };
+        
+        const mockBranchData = [
+          { branch: 'Computer Science', placementRate: 95.2, totalStudents: 1200, placedStudents: 1142 },
+          { branch: 'Electronics', placementRate: 89.1, totalStudents: 800, placedStudents: 713 },
+          { branch: 'Mechanical', placementRate: 82.5, totalStudents: 900, placedStudents: 743 },
+          { branch: 'Electrical', placementRate: 85.7, totalStudents: 700, placedStudents: 600 },
+          { branch: 'Civil', placementRate: 78.3, totalStudents: 600, placedStudents: 470 },
+          { branch: 'Chemical', placementRate: 81.2, totalStudents: 400, placedStudents: 325 }
+        ];
+        
+        const transformedColleges = colleges.map(college => ({
+          ...college,
+          type: college.name.includes('IIT') || college.name.includes('NIT') ? 'Government' : 'Private',
+          totalStudents: Math.floor(Math.random() * 500) + 200,
+          placedStudents: Math.floor(Math.random() * 400) + 150,
+          placementRate: Math.floor(Math.random() * 30) + 70,
+          avgPackage: Math.floor(Math.random() * 2000000) + 800000
+        }));
 
-        setStats(placementStats);
-        setBranchData(branchStats);
-        setCollegeData(colleges);
+        setStats(mockStats);
+        setBranchData(mockBranchData);
+        setCollegeData(transformedColleges);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
